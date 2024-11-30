@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { ctrlWrapper } from '../utils/ctrlWrapper';
+import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 // import { getAllContacts, getContactById } from './services/contacts.js';
 import {
   getContactsByIdController,

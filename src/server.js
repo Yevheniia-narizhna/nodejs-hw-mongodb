@@ -3,6 +3,8 @@ import cors from 'cors';
 import pino from 'pino-http';
 // import { getAllContacts, getContactById } from './services/contacts.js';
 import contactsRouter from './routers/contacts.js';
+import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import { errorHandler } from './middlewares/errorHandler.js';
 // const logger = pino();
 const app = express();
 
@@ -52,17 +54,21 @@ app.use(
 //   });
 // });
 
-app.use((req, res) => {
-  res.status(404).json({ message: 'Not found' });
+app.use(notFoundHandler);
+app.use('*', errorHandler);
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Contact Book',
+  });
 });
 
-app.use((err, req, res, next) => {
-  res.status(500).json({
-    message: 'Something went wrong!',
-    error: err.message,
-  });
-  next();
-});
+// app.use((err, req, res, next) => {
+//   res.status(500).json({
+//     message: 'Something went wrong!',
+//     error: err.message,
+//   });
+//   next();
+// });
 
 const setupServer = () => {
   const PORT = process.env.PORT || 3000;
