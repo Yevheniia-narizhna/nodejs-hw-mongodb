@@ -1,12 +1,13 @@
 import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
-import { getAllContacts, getContactById } from './services/contacts.js';
-
+// import { getAllContacts, getContactById } from './services/contacts.js';
+import contactsRouter from './routers/contacts.js';
 // const logger = pino();
 const app = express();
 
 app.use(cors());
+app.use(contactsRouter); // Додаємо роутер до app як middleware
 
 // app.use((req, res, next) => {
 //   logger.info(`${req.method} ${req.url}`);
@@ -24,32 +25,32 @@ app.use(
   }),
 );
 
-app.get('/contacts', async (req, res) => {
-  const contactsAll = await getAllContacts();
-  res.status(200).json({
-    status: 200,
-    message: 'Successfully found contacts!',
-    data: contactsAll,
-  });
-});
+// app.get('/contacts', async (req, res) => {
+//   const contactsAll = await getAllContacts();
+//   res.status(200).json({
+//     status: 200,
+//     message: 'Successfully found contacts!',
+//     data: contactsAll,
+//   });
+// });
 
-app.get('/contacts/:contactId', async (req, res) => {
-  const { contactId } = req.params;
-  const contact = await getContactById(contactId);
+// app.get('/contacts/:contactId', async (req, res) => {
+//   const { contactId } = req.params;
+//   const contact = await getContactById(contactId);
 
-  if (!contact) {
-    res.status(404).json({
-      message: 'Contact not found',
-    });
-    return;
-  }
+//   if (!contact) {
+//     res.status(404).json({
+//       message: 'Contact not found',
+//     });
+//     return;
+//   }
 
-  res.status(200).json({
-    status: 200,
-    message: `Successfully found contact with id ${contactId}!`,
-    data: contact,
-  });
-});
+//   res.status(200).json({
+//     status: 200,
+//     message: `Successfully found contact with id ${contactId}!`,
+//     data: contact,
+//   });
+// });
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' });
