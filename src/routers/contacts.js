@@ -28,8 +28,8 @@ router.get(
 
 router.post(
   '/contacts',
-  validateBody(createContactSchema),
   jsonParser,
+  validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 );
 
@@ -41,9 +41,9 @@ router.delete(
 
 router.patch(
   '/contacts/:contactId',
-  validateBody(updateContactSchema),
   isValidId,
   jsonParser,
+  validateBody(updateContactSchema),
   ctrlWrapper(patchContactController),
 );
 
