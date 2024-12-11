@@ -2,14 +2,14 @@ import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
 // import { getAllContacts, getContactById } from './services/contacts.js';
-import contactsRouter from './routers/contacts.js';
+import router from './routers/index.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 // const logger = pino();
 const app = express();
 
 app.use(cors());
-app.use(contactsRouter); // Додаємо роутер до app як middleware
+app.use(router); // Додаємо роутер до app як middleware
 
 // app.use((req, res, next) => {
 //   logger.info(`${req.method} ${req.url}`);
