@@ -10,8 +10,8 @@ import cookieParser from 'cookie-parser';
 const app = express();
 
 app.use(cors());
-app.use(router); // Додаємо роутер до app як middleware
 app.use(cookieParser());
+app.use(router); // Додаємо роутер до app як middleware
 
 app.use(
   pino({
