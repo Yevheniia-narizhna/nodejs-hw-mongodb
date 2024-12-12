@@ -14,25 +14,41 @@ import {
   updateContactSchema,
 } from '../validation/contacts.js';
 import { isValidId } from '../middlewares/isValidId.js';
+import { authenticate } from '../middlewares/authenticate.js';
+import { checkRoles } from '../middlewares/checkRoles.js';
+import { ROLES } from '../constants/index.js';
 
 const router = express.Router();
 const jsonParser = express.json();
+router.use(authenticate);
 
-router.get('/', ctrlWrapper(getContactsController));
+router.get('/', checkRoles(ROLES.USER), ctrlWrapper(getContactsController));
 
-router.get('/:contactId', isValidId, ctrlWrapper(getContactsByIdController));
+router.get(
+  '/:contactId',
+  checkRoles(ROLES.USER),
+  isValidId,
+  ctrlWrapper(getContactsByIdController),
+);
 
 router.post(
   '/',
+  checkRoles(ROLES.USER),
   jsonParser,
   validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 );
 
-router.delete('/:contactId', isValidId, ctrlWrapper(deleteContactController));
+router.delete(
+  '/:contactId',
+  checkRoles(ROLES.USER),
+  isValidId,
+  ctrlWrapper(deleteContactController),
+);
 
 router.patch(
   '/:contactId',
+  checkRoles(ROLES.USER),
   isValidId,
   jsonParser,
   validateBody(updateContactSchema),
