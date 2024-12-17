@@ -13,7 +13,7 @@ import { sendMail } from '../utils/sendMail.js';
 // import { log } from 'node:console';
 
 const RESET_PASSWORD_TEMPLATES = fs.readFileSync(
-  path.resolve('src/templates/reset-password.hbs'),
+  path.resolve('src/templates/reset-password-email.hbs'),
   { encoding: 'UTF-8' },
 );
 

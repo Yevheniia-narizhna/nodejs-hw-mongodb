@@ -17,6 +17,7 @@ import { isValidId } from '../middlewares/isValidId.js';
 import { authenticate } from '../middlewares/authenticate.js';
 import { checkRoles } from '../middlewares/checkRoles.js';
 import { ROLES } from '../constants/index.js';
+import { upload } from '../middlewares/upload.js';
 
 const router = express.Router();
 const jsonParser = express.json();
@@ -35,6 +36,7 @@ router.post(
   '/',
   checkRoles(ROLES.USER),
   jsonParser,
+  upload.single('photo'),
   validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 );
@@ -50,6 +52,7 @@ router.patch(
   '/:contactId',
   checkRoles(ROLES.USER),
   isValidId,
+  upload.single('photo'),
   jsonParser,
   validateBody(updateContactSchema),
   ctrlWrapper(patchContactController),
