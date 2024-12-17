@@ -1,11 +1,21 @@
+import * as fs from 'node:fs';
+import path from 'node:path';
 import bcrypt from 'bcrypt';
+import handlebars from 'handlebars';
 import crypto, { randomBytes } from 'node:crypto';
 import { UsersCollection } from '../models/user.js';
 import createHttpError from 'http-errors';
 import { SessionsCollection } from '../models/session.js';
 import { FIFTEEN_MINUTES, ONE_DAY, THIRTY_DAYS } from '../constants/index.js';
 import jwt from 'jsonwebtoken';
+import { sendMail } from '../utils/sendMail.js';
+
 // import { log } from 'node:console';
+
+const RESET_PASSWORD_TEMPLATES = fs.readFileSync(
+  path.resolve('src/templates/reset-password.hbs'),
+  { encoding: 'UTF-8' },
+);
 
 export const registerUser = async (payload) => {
   const user = await UsersCollection.findOne({ email: payload.email });
@@ -102,7 +112,25 @@ export const requestResetToken = async (email) => {
       expiresIn: '15m',
     },
   );
-  console.log(resetToken);
+  const html = handlebars.compile(RESET_PASSWORD_TEMPLATES);
+  // console.log(resetToken);
+  try {
+    await sendMail({
+      from: process.env.SMTP_FROM,
+      to: user.email,
+      subject: 'Reset password',
+      html: html({
+        name: user.name,
+        link: `${process.env.APP_DOMAIN}/reset-password?token=${resetToken}`,
+      }),
+    });
+  } catch (error) {
+    console.log(error.message);
+    throw createHttpError(
+      500,
+      'Failed to send the email, please try again later.',
+    );
+  }
 };
 
 export const resetPassword = async (payload) => {
