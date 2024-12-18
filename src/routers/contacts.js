@@ -14,34 +14,45 @@ import {
   updateContactSchema,
 } from '../validation/contacts.js';
 import { isValidId } from '../middlewares/isValidId.js';
+import { authenticate } from '../middlewares/authenticate.js';
+import { checkRoles } from '../middlewares/checkRoles.js';
+import { ROLES } from '../constants/index.js';
+import { upload } from '../middlewares/upload.js';
 
 const router = express.Router();
 const jsonParser = express.json();
+router.use(authenticate);
 
-router.get('/contacts', ctrlWrapper(getContactsController));
+router.get('/', checkRoles(ROLES.USER), ctrlWrapper(getContactsController));
 
 router.get(
-  '/contacts/:contactId',
+  '/:contactId',
+  checkRoles(ROLES.USER),
   isValidId,
   ctrlWrapper(getContactsByIdController),
 );
 
 router.post(
-  '/contacts',
+  '/',
+  checkRoles(ROLES.USER),
   jsonParser,
+  upload.single('photo'),
   validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 );
 
 router.delete(
-  '/contacts/:contactId',
+  '/:contactId',
+  checkRoles(ROLES.USER),
   isValidId,
   ctrlWrapper(deleteContactController),
 );
 
 router.patch(
-  '/contacts/:contactId',
+  '/:contactId',
+  checkRoles(ROLES.USER),
   isValidId,
+  upload.single('photo'),
   jsonParser,
   validateBody(updateContactSchema),
   ctrlWrapper(patchContactController),

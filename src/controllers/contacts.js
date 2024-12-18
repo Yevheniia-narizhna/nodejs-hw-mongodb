@@ -1,4 +1,5 @@
 // import { getAllContacts, getContactById } from './services/contacts.js';
+import * as fs from 'node:fs/promises';
 import createHttpError from 'http-errors';
 import {
   createContact,
@@ -10,6 +11,7 @@ import {
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { uploadToCloudinary } from '../utils/uploadToCloudinary.js';
 
 export const getContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -18,12 +20,15 @@ export const getContactsController = async (req, res) => {
 
   const filter = parseFilterParams(req.query);
 
+  const userId = req.user.id;
+
   const contactsAll = await getAllContacts({
     page,
     perPage,
     sortBy,
     sortOrder,
     filter,
+    userId,
   });
 
   res.status(200).json({
@@ -35,18 +40,18 @@ export const getContactsController = async (req, res) => {
 
 export const getContactsByIdController = async (req, res) => {
   const { contactId } = req.params;
-  const contact = await getContactById(contactId);
+  const userId = req.user.id;
+  const contact = await getContactById(contactId, userId);
+  const user = req.user;
 
   if (!contact) {
     throw createHttpError(404, 'Contact not found');
   }
 
-  //   if (!contact) {
-  //     res.status(404).json({
-  //       message: 'Contact not found',
-  //     });
-  //     return;
-  //   }
+  if (contact.userId.toString() !== user._id.toString()) {
+    throw createHttpError(403, 'Access denied to this contact');
+  }
+
   res.status(200).json({
     status: 200,
     message: `Successfully found contact with id ${contactId}!`,
@@ -55,7 +60,19 @@ export const getContactsByIdController = async (req, res) => {
 };
 
 export const createContactController = async (req, res) => {
-  const contact = await createContact(req.body);
+  const userId = req.user.id;
+
+  let photo = null;
+  if (req.file) {
+    const result = await uploadToCloudinary(req.file.path);
+
+    await fs.unlink(req.file.path);
+    photo = result.secure_url;
+  }
+
+  const contactData = { ...req.body, userId, photo };
+
+  const contact = await createContact(contactData);
 
   res.status(201).json({
     status: 201,
@@ -66,8 +83,9 @@ export const createContactController = async (req, res) => {
 
 export const deleteContactController = async (req, res, next) => {
   const { contactId } = req.params;
+  const userId = req.user.id;
 
-  const contact = await deleteContact(contactId);
+  const contact = await deleteContact(contactId, userId);
 
   if (!contact) {
     next(createHttpError(404, 'Contact not found'));
@@ -79,7 +97,16 @@ export const deleteContactController = async (req, res, next) => {
 
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
-  const result = await updateContact(contactId, req.body);
+  const userId = req.user.id;
+
+  let photo = null;
+  if (req.file) {
+    const result = await uploadToCloudinary(req.file.path);
+
+    await fs.unlink(req.file.path);
+    photo = result.secure_url;
+  }
+  const result = await updateContact(contactId, req.body, userId, photo);
 
   if (!result) {
     next(createHttpError(404, 'Contact not found'));
