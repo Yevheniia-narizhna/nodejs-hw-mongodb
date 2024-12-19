@@ -51,9 +51,9 @@ router.delete(
 router.patch(
   '/:contactId',
   checkRoles(ROLES.USER),
+  jsonParser,
   isValidId,
   upload.single('photo'),
-  jsonParser,
   validateBody(updateContactSchema),
   ctrlWrapper(patchContactController),
 );
