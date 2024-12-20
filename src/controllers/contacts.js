@@ -62,15 +62,14 @@ export const getContactsByIdController = async (req, res) => {
 export const createContactController = async (req, res) => {
   const userId = req.user.id;
 
-  let photo = null;
+  const contactData = { ...req.body, userId };
+
   if (req.file) {
     const result = await uploadToCloudinary(req.file.path);
 
     await fs.unlink(req.file.path);
-    photo = result.secure_url;
+    contactData.photo = result.secure_url;
   }
-
-  const contactData = { ...req.body, userId, photo };
 
   const contact = await createContact(contactData);
 
@@ -99,22 +98,15 @@ export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
   const userId = req.user.id;
 
-  let photo = null;
+  let updateData = { ...req.body };
   if (req.file) {
     const result = await uploadToCloudinary(req.file.path);
 
     await fs.unlink(req.file.path);
-    photo = result.secure_url;
+    updateData.photo = result.secure_url;
   }
 
-  const result = await updateContact(
-    contactId,
-    {
-      ...req.body,
-      photo,
-    },
-    userId,
-  );
+  const result = await updateContact(contactId, updateData, userId);
 
   if (!result) {
     next(createHttpError(404, 'Contact not found'));
