@@ -1,4 +1,4 @@
-description: Server error
+description: Id is not valid
 content:
   application/json:
     schema:
@@ -6,14 +6,10 @@ content:
       required:
         - status
         - message
-        - data
       properties:
         status:
           type: integer
-          example: 500
+          example: 400
         message:
           type: string
-          example: Something went wrong
-        error:
-          type: string
-          example: Internal Server Error
+          example: Id is not valid

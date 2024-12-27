@@ -1,4 +1,4 @@
-description: Bad Request Error
+description: Body is not valid
 content:
   application/json:
     schema:
@@ -11,5 +11,5 @@ content:
           type: integer
           example: 400
         message:
-          type: string
-          example: Bad Request
+          type: array
+          example: []
