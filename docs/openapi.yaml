@@ -12,12 +12,21 @@ tags:
   - name: Auth
     description: Auth operations.
 servers:
-  - url: http://localhost:3000
+  - url: http://127.0.0.1:3000
   - url: https://nodejs-hw-mongodb-6-brjk.onrender.com
 paths:
-  /contacts:
+  /contact:
     post:
       $ref: ./swagger/paths/contact/post.yaml
+    get:
+      $ref: ./swagger/paths/contact/get.yaml
+  /contact/{id}:
+    get:
+      $ref: ./swagger/paths/contact/{id}/get.yaml
+    delete:
+      $ref: ./swagger/paths/contact/{id}/delete.yaml
+    patch:
+      $ref: ./swagger/paths/contact/{id}/patch.yaml
 components:
   securitySchemes:
     bearerAuth:

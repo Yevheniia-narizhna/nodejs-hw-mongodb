@@ -1,10 +1,17 @@
 tags:
   - Contacts
-summary: Create contact
-operationId: createContact
-description: Create a contact with payload
+summary: Contact update
+operationId: patchContact
+description: Update contact by id
 security:
   - bearerAuth: []
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      example: 6761bece41a932c67e41728a
 requestBody:
   content:
     multipart/form-data:
@@ -61,10 +68,10 @@ responses:
               example: Successfully created a contact!
             data:
               type: object
-              $ref: ../../components/schemas/contact.yaml
+              $ref: ../../../components/schemas/contact.yaml
   '400':
-    $ref: ../../components/responses/400_body.yaml
+    $ref: ../../../components/responses/400_body.yaml
   '401':
-    $ref: ../../components/responses/401.yaml
+    $ref: ../../../components/responses/401.yaml
   '500':
-    $ref: ../../components/responses/500.yaml
+    $ref: ../../../components/responses/500.yaml

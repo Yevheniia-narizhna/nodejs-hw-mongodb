@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 export const SORT_ORDER = {
   ASC: 'asc',
   DESC: 'desc',
@@ -10,3 +12,5 @@ export const THIRTY_DAYS = 30 * ONE_DAY;
 export const ROLES = {
   USER: 'user',
 };
+
+export const SWAGGER_PATH = path.join(process.cwd(), 'docs', 'swagger.json');

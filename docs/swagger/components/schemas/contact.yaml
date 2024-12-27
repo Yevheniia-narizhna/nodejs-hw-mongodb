@@ -40,3 +40,11 @@ properties:
     type: string
     format: binary
     example: https://res.cloudinary.com/du6ftaech/image/upload/v1734508334/illi4ephhor33jhfz5qk.png
+  createdAt:
+    description: 'Contacts created at'
+    type: string
+    example: '2024-12-18T07:52:16.935+00:00'
+  updatedAt:
+    description: 'Contact updated at'
+    type: string
+    example: '2024-12-18T07:52:16.935+00:00'

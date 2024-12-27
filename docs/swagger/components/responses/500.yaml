@@ -14,6 +14,6 @@ content:
         message:
           type: string
           example: Something went wrong
-        error:
+        data:
           type: string
           example: Internal Server Error
