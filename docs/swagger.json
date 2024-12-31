@@ -14,7 +14,7 @@
       "url": "http://127.0.0.1:3000"
     },
     {
-      "url": "https://nodejs-hw-mongodb-6-brjk.onrender.com"
+      "url": "https://nodejs-hw-mongodb-7-pomm.onrender.com"
     }
   ],
   "tags": [
@@ -453,8 +453,8 @@
           }
         },
         "responses": {
-          "201": {
-            "description": "Creates a contact",
+          "200": {
+            "description": "Contact update",
             "content": {
               "application/json": {
                 "schema": {
@@ -467,11 +467,11 @@
                   "properties": {
                     "status": {
                       "type": "integer",
-                      "example": 201
+                      "example": 200
                     },
                     "message": {
                       "type": "string",
-                      "example": "Successfully created a contact!"
+                      "example": "Successfully patched a contact!!"
                     },
                     "data": {
                       "type": "object",
@@ -487,6 +487,9 @@
           },
           "401": {
             "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
           },
           "500": {
             "$ref": "#/components/responses/500"
