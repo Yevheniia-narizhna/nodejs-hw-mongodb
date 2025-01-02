@@ -11,7 +11,7 @@
   },
   "servers": [
     {
-      "url": "http://127.0.0.1:3000"
+      "url": "http://localhost:32307"
     },
     {
       "url": "https://nodejs-hw-mongodb-7-pomm.onrender.com"
@@ -28,7 +28,7 @@
     }
   ],
   "paths": {
-    "/contact": {
+    "/contacts": {
       "post": {
         "tags": [
           "Contacts"
@@ -273,7 +273,7 @@
         }
       }
     },
-    "/contact/{id}": {
+    "/contacts/{id}": {
       "get": {
         "tags": [
           "Contacts"
